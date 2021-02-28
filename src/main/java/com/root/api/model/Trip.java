@@ -47,12 +47,14 @@ public class Trip {
         return milerPerMin * 60;
     }
 
-
     @Override
     public String toString() {
         return "Trip{" +
                 "driverName='" + driverName + '\'' +
-                ", speed=" + this.speed() +
+                ", startTimeInMin=" + startTimeInMin +
+                ", endTimeInMin=" + endTimeInMin +
+                ", miles=" + miles +
+                ", speed=" + speed() +
                 '}';
     }
 }

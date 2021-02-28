@@ -8,11 +8,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
 public class DrivingDataProcessor {
 
+    private final static Logger LOGGER = Logger.getLogger(DrivingDataProcessor.class.getName());
     Map<String, AggregateDetails> detailsMap = new HashMap<>();
 
     public DrivingDataProcessor(String fileName) throws IOException {
@@ -33,25 +35,30 @@ public class DrivingDataProcessor {
     }
 
     private void processCmd(String line) {
-        processDriverCmd(line);
+        // if we process driver cmd then return
+        if (processDriverCmd(line)) return;
         processTripCmd(line);
     }
 
     /**
      * Process Driver and initiate aggregate object
+     *
      * @param line command instructions
      */
-    private void processDriverCmd(String line) {
+    private boolean processDriverCmd(String line) {
         Matcher driverMatcher = Commands.DRIVER.matcher(line);
         // only process if exact match found
         if (driverMatcher.find()) {
             String driverName = driverMatcher.group(2).trim(); // retrieve driver name
             detailsMap.computeIfAbsent(driverName, t -> new AggregateDetails(driverName));
+            return true;
         }
+        return false;
     }
 
     /**
      * Process trip data and aggregate information for specific driver
+     *
      * @param line command instructions
      */
     private void processTripCmd(String line) {
@@ -67,7 +74,11 @@ public class DrivingDataProcessor {
                 AggregateDetails aggregateDetails = detailsMap.get(trip.getDriverName());
                 aggregateDetails.addMiles(trip.getMiles());
                 aggregateDetails.addTotalTime(trip.getTime());
+            } else {
+                LOGGER.info("skipping trip: " + trip);
             }
+        } else {
+            LOGGER.info("skipping invalid cmd: " + line);
         }
     }
 
@@ -85,12 +96,16 @@ public class DrivingDataProcessor {
      * 2. Sort the output by most miles driven to least
      * 3. Round miles and miles per hour to the nearest integer
      */
-    public void totalMilesAndAverageReport() {
+    public String totalMilesAndAverageReport() {
+        StringBuilder sb = new StringBuilder();
         List<AggregateDetails> aggregateDetailsList = new ArrayList<>(detailsMap.values());
         // sort using total miles driven
         aggregateDetailsList.sort((a, b) -> (int) (b.getTotalMiles() - a.getTotalMiles()));
         for (AggregateDetails aggregateDetail : aggregateDetailsList) {
-            System.out.printf("%s: %d miles @ %d mph%n", aggregateDetail.getDriverName(), aggregateDetail.getTotalMiles(), aggregateDetail.avgMilesPerHr());
+            String msg = String.format("%s: %d miles @ %d mph", aggregateDetail.getDriverName(), aggregateDetail.getTotalMiles(), aggregateDetail.avgMilesPerHr());
+            LOGGER.info(msg);
+            sb.append(msg + "\n");
         }
+        return sb.toString();
     }
 }

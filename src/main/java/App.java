@@ -5,23 +5,24 @@ import java.io.File;
 public class App {
 
     public static void main(String[] args) {
-        // app start
-        new App().start(args);
-    }
-
-    private void start(String[] args) {
         try {
-            // validate command line arguments
-            validateProgramArguments(args);
-            String fileName = args[0];
-            validateFile(fileName);
-            // process data
-            DrivingDataProcessor drivingDataProcessor = new DrivingDataProcessor(fileName);
-            // Generate a report containing each driver with total miles driven and average speed
-            drivingDataProcessor.totalMilesAndAverageReport();
+            // app start
+            new App().start(args);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void start(String[] args) throws Exception {
+        // validate command line arguments
+        validateProgramArguments(args);
+        String fileName = args[0];
+        validateFile(fileName);
+        // process data
+        DrivingDataProcessor drivingDataProcessor = new DrivingDataProcessor(fileName);
+        // Generate a report containing each driver with total miles driven and average speed
+        String report = drivingDataProcessor.totalMilesAndAverageReport();
+        System.out.println(report);
     }
 
     private void validateFile(String fileName) throws Exception {
@@ -51,7 +52,7 @@ public class App {
         }
         // only expecting one argument <filename>
         if (args.length > 1) {
-            throw new Exception("Invalid argument passed to api. " + cmdExample);
+            throw new Exception("More then one argument is not supported. " + cmdExample);
         }
     }
 
