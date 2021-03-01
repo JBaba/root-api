@@ -22,7 +22,9 @@ public class App {
         DrivingDataProcessor drivingDataProcessor = new DrivingDataProcessor(fileName);
         // Generate a report containing each driver with total miles driven and average speed
         String report = drivingDataProcessor.totalMilesAndAverageReport();
+        System.out.println("==================== Report ========================");
         System.out.println(report);
+        System.out.println("====================================================");
     }
 
     private void validateFile(String fileName) throws Exception {

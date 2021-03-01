@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
@@ -35,9 +36,14 @@ public class DrivingDataProcessor {
     }
 
     private void processCmd(String line) {
-        // if we process driver cmd then return
-        if (processDriverCmd(line)) return;
-        processTripCmd(line);
+        try {
+            // if we process driver cmd then return
+            if (processDriverCmd(line)) return;
+            processTripCmd(line);
+        } catch (Exception ex) {
+            LOGGER.info("Error during processing command: " + line);
+            LOGGER.log(Level.SEVERE, ex.toString(), ex);
+        }
     }
 
     /**
