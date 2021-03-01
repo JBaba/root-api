@@ -1,5 +1,14 @@
 # root-api
 
+## Code Execution Details
+* I have compiled this using `Java - 11`
+* Also providing `root-api-1.0.jar` executable
+  * `java -jar root-api-1.0.jar input.txt`
+* You can also use `runWithDocker.sh` file to mount under container
+  * `sudo bash runWithDocker.sh /home/jbaba/Documents/javaworkspace/root-api/input.txt`
+
+
+## Object modeling / Software design
 ### General Project Structure
 1. `App.java` excepts our command line arguments
 2. We have 2 model classes
@@ -158,3 +167,6 @@ Advantage: When following invalid commands are passed,
 
 No match in a pattern, and we don't have to write complicated string parser in java
 
+## Testing approach
+
+Write test for every file.

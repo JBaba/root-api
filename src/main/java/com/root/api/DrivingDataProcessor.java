@@ -30,6 +30,7 @@ public class DrivingDataProcessor {
      */
     private void readFileAndPopulateDict(String fileName) throws IOException {
         Path path = Paths.get(fileName);
+        // lines takes care of big files
         try (Stream<String> lines = Files.lines(path)) {
             lines.forEach(this::processCmd);
         }
