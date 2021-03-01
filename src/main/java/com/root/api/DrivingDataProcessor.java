@@ -49,7 +49,7 @@ public class DrivingDataProcessor {
         Matcher driverMatcher = Commands.DRIVER.matcher(line);
         // only process if exact match found
         if (driverMatcher.find()) {
-            String driverName = driverMatcher.group(2).trim(); // retrieve driver name
+            String driverName = driverMatcher.group(3).trim(); // retrieve driver name
             detailsMap.computeIfAbsent(driverName, t -> new AggregateDetails(driverName));
             return true;
         }
@@ -83,10 +83,10 @@ public class DrivingDataProcessor {
     }
 
     private Trip createTrip(Matcher tripMatcher) {
-        String driverName = tripMatcher.group(2).trim();
-        String startTime = tripMatcher.group(3).trim();
-        String endTime = tripMatcher.group(5).trim();
-        String miles = tripMatcher.group(6).trim();
+        String driverName = tripMatcher.group(3).trim();
+        String startTime = tripMatcher.group(5).trim();
+        String endTime = tripMatcher.group(7).trim();
+        String miles = tripMatcher.group(9).trim();
         return new Trip(driverName, startTime, endTime, miles);
     }
 
